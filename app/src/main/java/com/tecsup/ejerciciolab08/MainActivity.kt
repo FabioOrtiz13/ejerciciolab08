@@ -42,6 +42,7 @@ fun TaskScreen(viewModel: TaskViewModel) {
     val tasks by viewModel.tasks.collectAsState()
     var newTaskDescription by remember { mutableStateOf("") }
     var searchQuery by remember { mutableStateOf("") }
+    var isAscending by remember { mutableStateOf(true) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         // Barra de búsqueda
@@ -53,12 +54,23 @@ fun TaskScreen(viewModel: TaskViewModel) {
         )
 
         Button(
-            onClick = {
-                viewModel.searchTasks(searchQuery)
-            },
+            onClick = { viewModel.searchTasks(searchQuery) },
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
         ) {
             Text("Buscar")
+        }
+
+        // Botón para ordenar las tareas
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Button(
+                onClick = {
+                    isAscending = !isAscending
+                    viewModel.sortTasksByName(isAscending)
+                },
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text("Ordenar tareas ${if (isAscending) "Ascendente" else "Descendente"}")
+            }
         }
 
         // Mostrar tareas
