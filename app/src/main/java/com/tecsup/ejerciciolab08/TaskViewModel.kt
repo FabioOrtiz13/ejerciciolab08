@@ -40,16 +40,25 @@ class TaskViewModel(private val dao: TaskDao) : ViewModel() {
         }
     }
 
-    fun searchTasks(query: String) {
-        viewModelScope.launch {
-            _tasks.value = dao.searchTasks(query)
-        }
-    }
-
     fun deleteAllTasks() {
         viewModelScope.launch {
             dao.deleteAllTasks()
             _tasks.value = emptyList()
         }
     }
+
+    fun searchTasks(query: String) {
+        viewModelScope.launch {
+            _tasks.value = dao.searchTasks(query)
+        }
+    }
+
+    // Función para ordenar las tareas por nombre (descripción)
+    fun sortTasksByName(ascending: Boolean = true) {
+        _tasks.value = _tasks.value.sortedBy { it.description }
+        if (!ascending) {
+            _tasks.value = _tasks.value.reversed()
+        }
+    }
 }
+
